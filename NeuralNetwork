@@ -1,0 +1,140 @@
+#NEURAL NETWORK
+#this is a function NN(x vect) = y vect
+
+import numpy as np 
+import pandas as pd 
+import matplotlib
+import matplotlib.pyplot as plt
+
+##################################################################################
+
+#setting up the question
+
+INPUT_SIZE = 4 #pass in a element of size 4
+
+#sizes of the layers 
+H1_SIZE = 5 #hidden layer
+H2_SIZE = 3 #this is the output layer
+
+LEARN_RATE = 0.1 #in the gradient descent, we are looking for the next point =  previous point + learning rate * gradient vector
+
+X = np.array([[0, 0, 1, 0], [1, 0, 0, 1], [0, 1, 0, 1], [0, 1, 1, 1]])
+Y = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 0, 1]])
+
+###################################################################################
+
+#implementing the forward propagation
+
+def initialize_weights():
+    #create these matrices 
+    w1 = np.random.randn(INPUT_SIZE, H1_SIZE)
+    w2 = np.random.randn(H1_SIZE, H2_SIZE)
+    b1 = np.random.randn(1, H1_SIZE)
+    b2 = np.random.randn(1, H2_SIZE) 
+    #print(np.shape(w1), np.shape(b1), np.shape(w2), np.shape(b2))
+    return(w1, b1, w2, b2)
+
+
+def sigmoid(z):
+    #z is a vector
+    sigmoid = 1 / (1 + np.exp(-z))
+    return(sigmoid)
+
+
+#need: forward function that accepts input (what we plug into system, w1, b1, w2, b2)
+
+def forward(x_vec, w1, b1, w2, b2):
+    #every time we run our code, we will get new weight matrices
+    z1 = np.dot(x_vec, w1) + b1 #x_vec is only the initial layer 
+    a1 = sigmoid(z1)
+    
+    z2 = np.dot(a1, w2) + b2 #the input to the next layer is the previous layer, which is a1
+    a2 = sigmoid(z2)
+    
+    return(a1, a2)
+
+
+def run(): #main entry point
+    #get our matrices 
+    w1, b1, w2, b2 = initialize_weights()
+    a1, a2 = forward(X, w1, b1, w2, b2) #we do not care about the first layer so we can put an underscore there. this is called curing
+    print(a2, '\n')
+    print(loss(Y, a2), '\n')
+    w1, b1, w2, b2 = train(500)
+    
+    print('\n')
+    a1, a2 = forward(X, w1, b1, w2, b2)
+    print(a2, '\n')
+    print(loss(Y, a2))
+    
+    '''
+    output = []
+    time = np.arange(1, 100)
+    for t in time:
+        NN = forward(t, w1, b1, w2, b2)
+        output.append(NN[0, 0]) #we convert to a real value since we cannot plot a matrix
+        
+    plt.plot(time, output)
+    plt.show()
+    '''
+    
+
+############################################################
+
+#loss function
+
+def loss(y_true, y_pred):
+    avg_loss = np.mean((y_true - y_pred)**2)
+    return(avg_loss)
+
+
+#############################################################
+
+#implementing the back propagation
+
+def sigmoid_derivative(var):
+    der = sigmoid(var)*(1 - sigmoid(var))
+    return(der)
+
+
+def back_prop(input, y_true, a1, a2, w1, b1, w2, b2):
+    #we need to pass the middle layers since they are all vectors 
+    #we need to constantly pass our weights and biases since they are always changing
+    error2 = y_true - a2
+    delta2 = error2 * sigmoid_derivative(a2)
+    error1 = np.dot(delta2, w2.T)
+    delta1 = error1 * sigmoid_derivative(a1)
+    
+    #we are computing how the errors propagate through the layers 
+    dw2 = np.dot(a1.T, delta2)
+    db2 = np.sum(delta2, axis = 0, keepdims = True)
+    dw1 = np.dot(input.T, delta1)
+    db1 = np.sum(delta1, axis = 0, keepdims = True)
+    
+    #implementing gradient descent 
+    w2_new = w2 +  LEARN_RATE*dw2
+    b2_new = b2 + LEARN_RATE*db2
+    w1_new = w1 + LEARN_RATE*dw1
+    b1_new = b1 + LEARN_RATE*db1
+
+    return(w1_new, b1_new, w2_new, b2_new)
+
+###########################################################
+
+#training function 
+def train(epochs):
+    #the input that is coming in is all of the input 
+    w1, b1, w2, b2 = initialize_weights()
+    for e in range(epochs):
+        a1, a2 = forward(X, w1, b1, w2, b2)
+        l = loss(Y, a2)
+        #print(l)
+        w1, b1, w2, b2 = back_prop(X, Y, a1, a2, w1, b1, w2, b2)
+    return(w1, b1, w2, b2)
+    
+###########################################################
+
+
+print('\n')
+run()
+print('\n')
