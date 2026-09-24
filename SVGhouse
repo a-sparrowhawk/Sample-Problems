@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+@author: aysha
+"""
+print(<html>)
+print(<body>)
+print(<h2>SVG House</h2>)
+
+print(<svg>)
+print(<height="10000" width="10000"/>)
+print(<rect width="130" height="150" stroke="black" stroke-width="4" fill="green" x="50" y="45"/>)
+print(rect width="40" height="70" stroke="black" stroke-width="2" fill="white" x="95" y="80"/>)
+print(<circle r="5" cx="105" cy="120" stroke="black" stroke-width="1" fill="yellow"/>)
+print(<polygon points="120,-5 187,45 43,45" />)
+
+print(</svg>)
+print(</body>)
+print(</html>)
