@@ -1,0 +1,15 @@
+import pandas as pd
+import numpy as np 
+
+Elevation = np.random.uniform(low = 0, high = 100, size = 100) 
+
+Percipitation = np.random.normal(loc = 100, scale = 50, size = 100)
+#loc is mean and scale is standard deviation
+
+for i in range(0, len(Percipitation)):
+    if Percipitation[i] < 0:
+        Percipitation[i] = 0
+
+#saving to a csv
+df = pd.DataFrame({"Elevation": Elevation, "Percipitation": Percipitation})
+df.to_csv("floodRisk.csv")
