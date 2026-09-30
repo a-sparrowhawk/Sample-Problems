@@ -1,0 +1,29 @@
+```{r}
+data("chickwts")
+var1 <- chickwts$weight
+chichwts300p <- var1[(chickwts$weight > 300)]
+print(chichwts300p)
+```
+
+
+```{r}
+var2 <- chickwts$feed
+chickwtsLinseed <- var2[(chickwts$feed == "linseed")]
+print(chickwtsLinseed)
+```   
+
+
+```{r}
+withLins <- subset(chickwts, feed == "linseed", select = c(weight, feed))
+withLinsWeight <- withLins$weight
+mean(withLinsWeight)
+sd(withLinsWeight)
+```
+
+
+```{r}
+noLins <- subset(chickwts, feed != "linseed", select = c(weight, feed))
+noLinsWeight <- noLins$weight
+mean(noLinsWeight)
+sd(noLinsWeight)
+```
