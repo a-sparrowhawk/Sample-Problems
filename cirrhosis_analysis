@@ -1,0 +1,7 @@
+import numpy as numpy
+import pandas as pd
+
+#data obtained from Kaggle
+data = pd.read_csv("cirrhosis.csv")
+
+print(data)
